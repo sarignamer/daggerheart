@@ -5,6 +5,27 @@ import path from "path";
 const app = express();
 app.use(express.json());
 
+const USER = "sarigAdmin";
+const PASS = "sarigPass";
+
+app.use((req, res, next) => {
+  const auth = req.headers.authorization;
+
+  if (!auth || !auth.startsWith("Basic ")) {
+    res.setHeader("WWW-Authenticate", 'Basic realm="Protected"');
+    return res.status(401).send("Auth required");
+  }
+
+  const base64 = auth.split(" ")[1];
+  const [user, pass] = Buffer.from(base64, "base64").toString().split(":");
+
+  if (user !== USER || pass !== PASS) {
+    return res.status(403).send("Invalid credentials");
+  }
+
+  next();
+});
+
 // Serve static files
 app.use(express.static(path.join(process.cwd(), "public")));
 
