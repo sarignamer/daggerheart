@@ -81,8 +81,4 @@ app.post("/api/character/save", (req, res) => {
   res.json({ ok: true });
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "views/index.html"));
-});
-
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
